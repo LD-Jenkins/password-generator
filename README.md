@@ -14,6 +14,6 @@ With the page now you are able to select two criteria for generating a password;
 
 ## Project Snapshots
 
-(assets/images/pwgen-launch.png)
-(assets/images/pwgen-post-generation.png)
+!(./assets/images/pwgen-launch.png)
+!(./assets/images/pwgen-post-generation.png)
 
