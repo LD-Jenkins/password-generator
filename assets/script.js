@@ -1,4 +1,3 @@
-// Assignment Code
 var generateBtn = document.querySelector("#generate");
 var cardFooter = document.querySelector(".card-footer");
 
@@ -8,90 +7,98 @@ var charTypes = [];
 var lower = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 var upper = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 var num = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-var special = ["!","\"","#","$","%","&","'","(",")","*","+",",","-",".","/",":",";","<","=",">","?","@","[","\\","]","^","_","`","{","|","}","~"];
+var special = ["!", "\"", "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/", ":", ";", "<", "=", ">", "?", "@", "[", "\\", "]", "^", "_", "`", "{", "|", "}", "~"];
 
+function resetGen() {
 
+  generateBtn.textContent = "Generate Password";
 
-// Write password to the #password input
+  var passwordText = document.querySelector("#password");
+  passwordText.textContent = "Your Secure Password";
+  generateBtn.addEventListener("click", getPWLen, { once: true });
+
+}
+
+// Take user selected character type arrays and concatenate them to a master array 
+// then randomly select letters to generate password ensuring one character of each type is selected
 function writePassword() {
 
-    // console.log(pwLen);
-    // console.log(charTypes);
-    // console.log(special);
-    var finalPW = [];
-    var validCharsList = [];
-    
+  var finalPW = [];
+  var validCharsList = [];
 
-    for (var i = 0; i < charTypes.length; i++) {
-      if (charTypes[i] == "lower") {
-        validCharsList = validCharsList.concat(lower);
-        var randNum = Math.floor(Math.random() * lower.length);
-        finalPW.push(lower[randNum]);
-        pwLen -= 1;
-      }
-      if (charTypes[i] == "upper") {
-        validCharsList = validCharsList.concat(upper);
-        var randNum = Math.floor(Math.random() * upper.length);
-        finalPW.push(upper[randNum]);
-        pwLen -= 1;
-      }
-      if (charTypes[i] == "num") {
-        validCharsList = validCharsList.concat(num);
-        var randNum = Math.floor(Math.random() * num.length);
-        finalPW.push(num[randNum]);
-        pwLen -= 1;
-      }
-      if (charTypes[i] == "special") {
-        validCharsList = validCharsList.concat(special);
-        var randNum = Math.floor(Math.random() * special.length);
-        finalPW.push(special[randNum]);
-        pwLen -= 1;
-      }
+
+  for (var i = 0; i < charTypes.length; i++) {
+    if (charTypes[i] == "lower") {
+      validCharsList = validCharsList.concat(lower);
+      var randNum = Math.floor(Math.random() * lower.length);
+      finalPW.push(lower[randNum]);
+      pwLen -= 1;
     }
-    // console.log(validCharsList);
-
-    for (var i = 0; i < pwLen; i++) {
-      var randNum = Math.floor(Math.random() * validCharsList.length);
-      finalPW.push(validCharsList[randNum]);
+    if (charTypes[i] == "upper") {
+      validCharsList = validCharsList.concat(upper);
+      var randNum = Math.floor(Math.random() * upper.length);
+      finalPW.push(upper[randNum]);
+      pwLen -= 1;
     }
+    if (charTypes[i] == "num") {
+      validCharsList = validCharsList.concat(num);
+      var randNum = Math.floor(Math.random() * num.length);
+      finalPW.push(num[randNum]);
+      pwLen -= 1;
+    }
+    if (charTypes[i] == "special") {
+      validCharsList = validCharsList.concat(special);
+      var randNum = Math.floor(Math.random() * special.length);
+      finalPW.push(special[randNum]);
+      pwLen -= 1;
+    }
+  }
 
-    console.log(finalPW);
-
+  for (var i = 0; i < pwLen; i++) {
+    var randNum = Math.floor(Math.random() * validCharsList.length);
+    finalPW.push(validCharsList[randNum]);
+  }
 
   var passwordText = document.querySelector("#password");
 
   var password = finalPW.join("");
   passwordText.textContent = password;
 
+  var resetGenBtn = setInterval(function() {
+      if (generateBtn.textContent == "Generate Password") {
+        clearInterval(resetGenBtn);
+      }
+      else {
+        generateBtn.textContent = "Reset";
+      }
+      
+  }, 4000);
+
+  generateBtn.addEventListener("click", resetGen, { once: true });
+
 }
 
+// Ensure user has selected at least one character type then add character types to a list
+// and remove form elements to clean up page
 function confirmCharTypes() {
 
   var newForm = document.getElementById("pwForm");
   var formData = new FormData(newForm);
 
-  // for (var key of formData.keys()) {
-  //   console.log(key);
-  // }
-  // for (var key of formData.values()) {
-  //   console.log(key);
-  // }
-  // for (var key of formData.entries()) {
-  //   console.log(key);
-  // }
   var keyList = [];
   var formKeys = formData.keys();
   for (var key in formKeys) {
     keyList.push(key);
   }
-  // console.log(formValues);
-  
+
   if (keyList.length == 0) {
 
     alert("Please select at least one character type.");
-    generateBtn.addEventListener("click", confirmCharTypes, {once : true});
+    generateBtn.addEventListener("click", confirmCharTypes, { once: true });
   }
   else {
+
+    charTypes.length = 0;
     for (var key of formData.keys()) {
       charTypes.push(key);
     }
@@ -99,13 +106,15 @@ function confirmCharTypes() {
     while (newForm.firstChild) {
       newForm.removeChild(newForm.firstChild);
     }
-    
+
     generateBtn.textContent = "Password Generated!";
+    
     writePassword();
   }
 
 }
 
+// Put checkbox form to screen dynamically and add event listener to button
 function getCharTypes() {
 
   var newForm = document.getElementById("pwForm");
@@ -157,25 +166,21 @@ function getCharTypes() {
 
   generateBtn.textContent = "Confirm Character Types";
 
-  generateBtn.addEventListener("click", confirmCharTypes, {once : true});
- 
+  generateBtn.addEventListener("click", confirmCharTypes, { once: true });
+
 }
 
+// Ensure user has entered password length from 8 to 128 then remove form data to clean up page
 function confirmLen() {
 
   var newForm = document.getElementById("pwForm");
   var formData = new FormData(newForm);
   var usrPWLen = formData.get("pwlen");
-  // for (var key of formData.keys()) {
-  //   console.log(key);
-  // }
-  // for (var key of formData.values()) {
-  //   console.log(key);
-  // }
+
   if (usrPWLen < 8 || usrPWLen > 128) {
 
     alert("Please enter a password length from 8 to 128.");
-    generateBtn.addEventListener("click", confirmLen, {once : true});
+    generateBtn.addEventListener("click", confirmLen, { once: true });
   }
   else {
     pwLen = usrPWLen;
@@ -188,6 +193,7 @@ function confirmLen() {
 
 }
 
+// Put text form elements to page dynamically and add event listener to button
 function getPWLen() {
 
   var newForm = document.createElement("form");
@@ -208,18 +214,13 @@ function getPWLen() {
   newInput.setAttribute("max", "128");
   newForm.appendChild(newInput);
 
-  // var newInputButton = document.createElement("input");
-  // newInputButton.setAttribute("type", "submit");
-  // newInputButton.setAttribute("value", "Submit");
-  // newForm.appendChild(newInputButton);
-
   generateBtn.textContent = "Confirm Length";
 
-  generateBtn.addEventListener("click", confirmLen, {once : true});
+  generateBtn.addEventListener("click", confirmLen, { once: true });
 
 }
 
-// Add event listener to generate button
-generateBtn.addEventListener("click", getPWLen, {once : true});
+// Initial event listener to button
+generateBtn.addEventListener("click", getPWLen, { once: true });
 
 
