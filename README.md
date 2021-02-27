@@ -1,5 +1,7 @@
 # password-generator
 
+This page is now live at https://ld-jenkins.github.io/password-generator/ !
+
 ## Project Goals
 
 This is a project using existing html and css. The page originally only had the elements necessary to show the basic text to the screen and added a non-functional button.
